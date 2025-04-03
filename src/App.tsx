@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Matches from "./pages/Matches";
 import AddItem from "./pages/AddItem";
 import Profile from "./pages/Profile";
+import Login from "./pages/Login";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +25,8 @@ const App = () => (
           <Route path="/matches" element={<Matches />} />
           <Route path="/add-item" element={<AddItem />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
