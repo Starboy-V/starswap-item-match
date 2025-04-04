@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Home, Heart, Plus, User } from "lucide-react";
+import { Home, Heart, Plus, User, Clock } from "lucide-react";
 
 const Footer = () => {
   const location = useLocation();
@@ -20,6 +20,10 @@ const Footer = () => {
           <Link to="/matches" className={`nav-icon ${isActive('/matches') ? 'text-primary' : 'text-gray-500'}`}>
             <Heart size={24} />
             <span>Matches</span>
+          </Link>
+          <Link to="/timeswap" className={`nav-icon ${isActive('/timeswap') ? 'text-primary' : 'text-gray-500'}`}>
+            <Clock size={24} />
+            <span>TimeSwap</span>
           </Link>
           <Link to="/add-item" className={`nav-icon ${isActive('/add-item') ? 'text-primary' : 'text-gray-500'}`}>
             <Plus size={24} />

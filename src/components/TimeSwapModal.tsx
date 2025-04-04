@@ -26,6 +26,11 @@ const TimeSwapModal = ({ open, onClose }: TimeSwapModalProps) => {
       title: "TimeSwap Created",
       description: `You are ${timeType} ${hours} hours of your time.`,
     });
+    // Reset form
+    setHours("1");
+    setTimeType("offering");
+    setDescription("");
+    setSkills("");
     onClose();
   };
 

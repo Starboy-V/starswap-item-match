@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import TimeSwap from "./pages/TimeSwap";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => {
               <Route path="/matches" element={<Matches />} />
               <Route path="/add-item" element={<AddItem />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/timeswap" element={<TimeSwap />} />
               <Route path="/login" element={<Login />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
