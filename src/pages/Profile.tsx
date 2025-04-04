@@ -3,44 +3,33 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { users, userItems } from "@/data/items";
-import { Edit, LogOut, Plus, Settings, Grid3X3, Bookmark } from "lucide-react";
+import { Edit, LogOut, Plus, Settings, Grid3X3, Bookmark, MessageCircle, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { 
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious
-} from "@/components/ui/carousel";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { 
   Tabs, 
   TabsContent, 
   TabsList, 
   TabsTrigger 
 } from "@/components/ui/tabs";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/card";
+import TimeSwapModal from "@/components/TimeSwapModal";
 
 const Profile = () => {
   // Get the current user - in a real app this would come from auth
   const currentUser = users.find(user => user.id === "currentUser");
   const [activeTab, setActiveTab] = useState("posts");
+  const [timeSwapModalOpen, setTimeSwapModalOpen] = useState(false);
 
-  // Mock stories and highlights data
-  const stories = [
-    { id: 1, imageUrl: "https://source.unsplash.com/random/300x300?trading=1", title: "New Item" },
-    { id: 2, imageUrl: "https://source.unsplash.com/random/300x300?swap=2", title: "Recent Swap" },
-    { id: 3, imageUrl: "https://source.unsplash.com/random/300x300?match=3", title: "Match" },
-    { id: 4, imageUrl: "https://source.unsplash.com/random/300x300?trade=4", title: "Trade" },
-  ];
-
-  const highlights = [
-    { id: 1, imageUrl: "https://source.unsplash.com/random/300x300?collection=1", title: "Favorites" },
-    { id: 2, imageUrl: "https://source.unsplash.com/random/300x300?collection=2", title: "Antiques" },
-    { id: 3, imageUrl: "https://source.unsplash.com/random/300x300?collection=3", title: "Electronics" },
-  ];
-
+  // Mock saved items data
   const savedItems = userItems.slice(0, 4); // Just for demo purposes
+  
+  // Mock timeswap data
+  const timeSwaps = [
+    { id: 1, user: "alexsmith", imageUrl: "https://source.unsplash.com/random/300x300?portrait=1", timeOffered: "2 hours", lookingFor: "Graphic design help" },
+    { id: 2, user: "jessicab", imageUrl: "https://source.unsplash.com/random/300x300?portrait=2", timeOffered: "1 hour", lookingFor: "Web development guidance" },
+  ];
 
   return (
     <div className="min-h-screen pb-16">
@@ -66,7 +55,7 @@ const Profile = () => {
             
             <div className="flex mt-2 text-sm">
               <div className="mr-4">
-                <span className="font-bold">{userItems.length}</span> items
+                <span className="font-bold">{userItems.length}</span> posts
               </div>
               <div className="mr-4">
                 <span className="font-bold">24</span> matches
@@ -76,84 +65,29 @@ const Profile = () => {
               </div>
             </div>
             
+            <p className="mt-2 text-sm">Swap enthusiast and collector of vintage items. Love to exchange and find treasures!</p>
+            
             <div className="mt-3">
               <Button variant="outline" size="sm" className="mr-2">
                 <Edit className="mr-1 h-4 w-4" />
                 Edit Profile
               </Button>
+              <Button 
+                size="sm" 
+                variant="default" 
+                className="mr-2"
+                onClick={() => setTimeSwapModalOpen(true)}
+              >
+                <Clock className="mr-1 h-4 w-4" />
+                TimeSwap
+              </Button>
               <Link to="/add-item">
                 <Button size="sm">
                   <Plus className="mr-1 h-4 w-4" />
-                  Add Item
+                  Add Post
                 </Button>
               </Link>
             </div>
-          </div>
-        </div>
-        
-        {/* Stories */}
-        <div className="mb-6">
-          <h2 className="text-sm font-semibold mb-2">Stories</h2>
-          <div className="relative">
-            <Carousel className="w-full">
-              <CarouselContent className="-ml-2">
-                <CarouselItem className="pl-2 basis-1/4">
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center border-2 border-dashed border-primary">
-                      <Plus className="h-6 w-6 text-primary" />
-                    </div>
-                    <span className="text-xs mt-1">New</span>
-                  </div>
-                </CarouselItem>
-                {stories.map(story => (
-                  <CarouselItem key={story.id} className="pl-2 basis-1/4">
-                    <div className="flex flex-col items-center">
-                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary p-0.5">
-                        <img 
-                          src={story.imageUrl} 
-                          alt={story.title} 
-                          className="w-full h-full object-cover rounded-full"
-                        />
-                      </div>
-                      <span className="text-xs mt-1">{story.title}</span>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-        </div>
-        
-        {/* Highlights */}
-        <div className="mb-6">
-          <h2 className="text-sm font-semibold mb-2">Highlights</h2>
-          <div className="relative">
-            <Carousel className="w-full">
-              <CarouselContent className="-ml-2">
-                <CarouselItem className="pl-2 basis-1/4">
-                  <div className="flex flex-col items-center">
-                    <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center border border-gray-300">
-                      <Plus className="h-6 w-6 text-gray-500" />
-                    </div>
-                    <span className="text-xs mt-1">New</span>
-                  </div>
-                </CarouselItem>
-                {highlights.map(highlight => (
-                  <CarouselItem key={highlight.id} className="pl-2 basis-1/4">
-                    <div className="flex flex-col items-center">
-                      <div className="w-16 h-16 rounded-full overflow-hidden border border-gray-300">
-                        <img 
-                          src={highlight.imageUrl} 
-                          alt={highlight.title} 
-                          className="w-full h-full object-cover rounded-full"
-                        />
-                      </div>
-                      <span className="text-xs mt-1">{highlight.title}</span>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
           </div>
         </div>
         
@@ -166,11 +100,8 @@ const Profile = () => {
             <TabsTrigger value="saved">
               <Bookmark className="h-5 w-5" />
             </TabsTrigger>
-            <TabsTrigger value="matches">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M2 8.5C2 5 4 3.5 7 3.5C8.5 3.5 9.93063 4.15468 11 5.5C12.0694 4.15468 13.5 3.5 15 3.5C18 3.5 20 5 20 8.5C20 11.6667 17.4722 15.7778 11 20C4.52778 15.7778 2 11.6667 2 8.5Z" 
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+            <TabsTrigger value="timeswaps">
+              <Clock className="h-5 w-5" />
             </TabsTrigger>
           </TabsList>
           
@@ -202,18 +133,31 @@ const Profile = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="matches" className="mt-4">
-            <div className="grid grid-cols-3 gap-1">
-              {/* Mock matched items */}
-              {[1, 2, 3].map(i => (
-                <div key={i} className="aspect-square">
-                  <img 
-                    src={`https://source.unsplash.com/random/300x300?match=${i}`} 
-                    alt={`Match ${i}`} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+          <TabsContent value="timeswaps" className="mt-4">
+            <div className="space-y-4">
+              {timeSwaps.map(swap => (
+                <Card key={swap.id} className="p-4">
+                  <div className="flex items-center">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src={swap.imageUrl} alt={swap.user} />
+                      <AvatarFallback>{swap.user[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="ml-3">
+                      <h3 className="font-medium">{swap.user}</h3>
+                      <p className="text-sm text-gray-500">Offering: {swap.timeOffered}</p>
+                      <p className="text-sm text-gray-500">Needs: {swap.lookingFor}</p>
+                    </div>
+                    <Button size="sm" className="ml-auto">
+                      <MessageCircle className="mr-1 h-4 w-4" />
+                      Contact
+                    </Button>
+                  </div>
+                </Card>
               ))}
+              <Button variant="outline" className="w-full">
+                <Plus className="mr-1 h-4 w-4" />
+                Create New TimeSwap
+              </Button>
             </div>
           </TabsContent>
         </Tabs>
@@ -236,6 +180,7 @@ const Profile = () => {
         </div>
       </main>
       
+      <TimeSwapModal open={timeSwapModalOpen} onClose={() => setTimeSwapModalOpen(false)} />
       <Footer />
     </div>
   );
