@@ -1,21 +1,22 @@
-
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Clock, Plus, ArrowRight, MessageCircle } from "lucide-react";
+import { Clock, Plus, ArrowRight, MessageCircle, Heart, Share2, MessageSquare } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import TimeSwapModal from "@/components/TimeSwapModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const TimeSwap = () => {
   const [timeSwapModalOpen, setTimeSwapModalOpen] = useState(false);
   const [selectedChat, setSelectedChat] = useState<null | { id: number; name: string; avatar: string }>(null);
   const [message, setMessage] = useState("");
+  const [likedPosts, setLikedPosts] = useState<number[]>([]);
 
-  // Mock data for time swap offerings
+  // Mock data for time swap offerings with images/videos and social features
   const timeSwapItems = [
     {
       id: 1,
@@ -23,8 +24,12 @@ const TimeSwap = () => {
       avatar: "https://source.unsplash.com/random/300x300?portrait=1",
       hours: 2,
       skills: "Graphic design, Photoshop, Illustrator",
-      description: "I can help with your design needs. Let me know what you're looking for!",
-      type: "offering"
+      description: "Just finished this new design project! Anyone interested in learning these techniques?",
+      type: "offering",
+      media: "https://source.unsplash.com/random/600x800?design=1",
+      likes: 24,
+      comments: 5,
+      isVideo: false
     },
     {
       id: 2,
@@ -32,8 +37,12 @@ const TimeSwap = () => {
       avatar: "https://source.unsplash.com/random/300x300?portrait=2",
       hours: 1,
       skills: "Web development, React, Node.js",
-      description: "Need help with React or Node.js? I'm your person!",
-      type: "offering"
+      description: "Built this React component library in my spare time. Happy to teach in exchange for cooking lessons!",
+      type: "offering",
+      media: "https://source.unsplash.com/random/600x800?coding=1",
+      likes: 18,
+      comments: 3,
+      isVideo: false
     },
     {
       id: 3,
@@ -41,8 +50,12 @@ const TimeSwap = () => {
       avatar: "https://source.unsplash.com/random/300x300?portrait=3",
       hours: 3,
       skills: "Photography, Lightroom editing",
-      description: "I can teach you photo editing techniques or help with your portfolio.",
-      type: "seeking"
+      description: "Shot this on my latest nature hike. Looking to trade photography skills for language lessons!",
+      type: "seeking",
+      media: "https://source.unsplash.com/random/600x800?nature=1",
+      likes: 56,
+      comments: 12,
+      isVideo: false
     },
     {
       id: 4,
@@ -50,8 +63,12 @@ const TimeSwap = () => {
       avatar: "https://source.unsplash.com/random/300x300?portrait=4",
       hours: 2,
       skills: "Language tutoring, Spanish, French",
-      description: "Looking for help with Spanish or French language practice.",
-      type: "seeking"
+      description: "Made this quick tutorial for basic Spanish phrases. Would love to swap language skills!",
+      type: "seeking",
+      media: "https://source.unsplash.com/random/600x800?study=1",
+      likes: 32,
+      comments: 8,
+      isVideo: true
     }
   ];
 
@@ -78,6 +95,14 @@ const TimeSwap = () => {
     }
   };
 
+  const toggleLike = (postId: number) => {
+    if (likedPosts.includes(postId)) {
+      setLikedPosts(likedPosts.filter(id => id !== postId));
+    } else {
+      setLikedPosts([...likedPosts, postId]);
+    }
+  };
+
   return (
     <div className="min-h-screen pb-16">
       <Header />
@@ -97,10 +122,10 @@ const TimeSwap = () => {
             <TabsTrigger value="chat" className="flex-1">Messages</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="browse" className="space-y-4">
-            <div className="grid gap-4">
+          <TabsContent value="browse" className="space-y-6">
+            <div className="grid gap-6">
               {timeSwapItems.map(item => (
-                <Card key={item.id}>
+                <Card key={item.id} className="overflow-hidden">
                   <CardHeader className="pb-2">
                     <div className="flex items-center">
                       <Avatar className="h-10 w-10 mr-3">
@@ -118,10 +143,49 @@ const TimeSwap = () => {
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm font-semibold mb-1">Skills: {item.skills}</p>
-                    <p className="text-sm">{item.description}</p>
-                  </CardContent>
+                  
+                  <AspectRatio ratio={4/5} className="bg-muted">
+                    {item.isVideo ? (
+                      <video 
+                        src={item.media} 
+                        controls 
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <img 
+                        src={item.media} 
+                        alt={`${item.user}'s post`}
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                  </AspectRatio>
+                  
+                  <div className="p-4 pb-0">
+                    <div className="flex space-x-4 mb-2">
+                      <button 
+                        onClick={() => toggleLike(item.id)}
+                        className="flex items-center"
+                      >
+                        <Heart 
+                          className={`h-6 w-6 mr-1 ${likedPosts.includes(item.id) ? "fill-red-500 text-red-500" : ""}`} 
+                        />
+                        <span className="text-sm">{likedPosts.includes(item.id) ? item.likes + 1 : item.likes}</span>
+                      </button>
+                      <button className="flex items-center">
+                        <MessageSquare className="h-6 w-6 mr-1" />
+                        <span className="text-sm">{item.comments}</span>
+                      </button>
+                      <button className="flex items-center ml-auto">
+                        <Share2 className="h-6 w-6" />
+                      </button>
+                    </div>
+                    
+                    <div className="mb-2">
+                      <p className="text-sm"><span className="font-semibold">{item.user}</span> {item.description}</p>
+                    </div>
+                    <p className="text-sm font-medium text-muted-foreground mb-2">Skills: {item.skills}</p>
+                  </div>
+                  
                   <CardFooter>
                     <Button 
                       variant="outline" 
@@ -163,7 +227,6 @@ const TimeSwap = () => {
               </div>
             ) : (
               <div className="border rounded-lg overflow-hidden">
-                {/* Chat header */}
                 <div className="p-3 border-b flex items-center bg-gray-50">
                   <Button 
                     variant="ghost" 
@@ -180,7 +243,6 @@ const TimeSwap = () => {
                   <span className="font-medium">{selectedChat.name}</span>
                 </div>
                 
-                {/* Chat messages */}
                 <div className="p-4 h-80 overflow-y-auto space-y-3">
                   {chatMessages.map(msg => (
                     <div 
@@ -201,7 +263,6 @@ const TimeSwap = () => {
                   ))}
                 </div>
                 
-                {/* Message input */}
                 <div className="p-3 border-t flex">
                   <Input 
                     value={message}
