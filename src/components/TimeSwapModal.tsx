@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/hooks/use-toast";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormDescription } from "@/components/ui/form";
+import { Clock } from "lucide-react";
 
 interface TimeSwapModalProps {
   open: boolean;
@@ -55,7 +55,14 @@ const TimeSwapModal = ({ open, onClose }: TimeSwapModalProps) => {
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Create a TimeSwap</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <Clock className="h-5 w-5 text-primary" />
+            Create a TimeSwap
+            <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">Temporary Swap</span>
+          </DialogTitle>
+          <p className="text-sm text-muted-foreground mt-1">
+            TimeSwap allows you to temporarily exchange skills or items for a specific duration.
+          </p>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-2">
@@ -65,13 +72,13 @@ const TimeSwapModal = ({ open, onClose }: TimeSwapModalProps) => {
               onValueChange={setSwapType} 
               className="grid grid-cols-2 gap-4"
             >
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-muted/50 transition-colors cursor-pointer">
                 <RadioGroupItem value="skills" id="skills" />
-                <Label htmlFor="skills">Skills & Services</Label>
+                <Label htmlFor="skills" className="cursor-pointer">Skills & Services</Label>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 border rounded-md p-3 hover:bg-muted/50 transition-colors cursor-pointer">
                 <RadioGroupItem value="items" id="items" />
-                <Label htmlFor="items">Physical Items</Label>
+                <Label htmlFor="items" className="cursor-pointer">Physical Items</Label>
               </div>
             </RadioGroup>
           </div>
@@ -101,7 +108,7 @@ const TimeSwapModal = ({ open, onClose }: TimeSwapModalProps) => {
           {swapType === "skills" ? (
             <>
               <div className="grid gap-2">
-                <Label htmlFor="hours">Hours:</Label>
+                <Label htmlFor="hours">Duration (hours):</Label>
                 <Select value={hours} onValueChange={setHours}>
                   <SelectTrigger id="hours">
                     <SelectValue placeholder="Select hours" />
@@ -143,7 +150,7 @@ const TimeSwapModal = ({ open, onClose }: TimeSwapModalProps) => {
               </div>
               
               <div className="grid gap-2">
-                <Label htmlFor="days">Duration (days):</Label>
+                <Label htmlFor="days">Lending Duration (days):</Label>
                 <Select value={days} onValueChange={setDays}>
                   <SelectTrigger id="days">
                     <SelectValue placeholder="Select days" />
@@ -173,6 +180,11 @@ const TimeSwapModal = ({ open, onClose }: TimeSwapModalProps) => {
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
             />
+          </div>
+          
+          <div className="text-xs text-muted-foreground bg-muted p-3 rounded-md">
+            <strong>Note:</strong> TimeSwap is for temporary exchanges only. For permanent item swaps, please use 
+            <a href="/" className="text-primary font-medium ml-1">StarSwap</a> instead.
           </div>
           
           <DialogFooter className="sm:justify-between">

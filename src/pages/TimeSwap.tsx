@@ -1,14 +1,16 @@
+
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Clock, Plus, ArrowRight, MessageCircle, Heart, Share2, MessageSquare } from "lucide-react";
+import { Clock, Plus, ArrowRight, MessageCircle, Heart, Share2, MessageSquare, Timer } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import TimeSwapModal from "@/components/TimeSwapModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Badge } from "@/components/ui/badge";
 
 const TimeSwap = () => {
   const [timeSwapModalOpen, setTimeSwapModalOpen] = useState(false);
@@ -29,7 +31,9 @@ const TimeSwap = () => {
       media: "https://source.unsplash.com/random/600x800?design=1",
       likes: 24,
       comments: 5,
-      isVideo: false
+      isVideo: false,
+      swapType: "skills",
+      duration: "2 hours"
     },
     {
       id: 2,
@@ -42,33 +46,37 @@ const TimeSwap = () => {
       media: "https://source.unsplash.com/random/600x800?coding=1",
       likes: 18,
       comments: 3,
-      isVideo: false
+      isVideo: false,
+      swapType: "skills",
+      duration: "1 hour"
     },
     {
       id: 3,
       user: "Michael Lee",
       avatar: "https://source.unsplash.com/random/300x300?portrait=3",
-      hours: 3,
-      skills: "Photography, Lightroom editing",
-      description: "Shot this on my latest nature hike. Looking to trade photography skills for language lessons!",
-      type: "seeking",
-      media: "https://source.unsplash.com/random/600x800?nature=1",
+      itemName: "DSLR Camera",
+      description: "Lending my Canon EOS for a weekend photoshoot. Perfect for nature photography!",
+      type: "offering",
+      media: "https://source.unsplash.com/random/600x800?camera=1",
       likes: 56,
       comments: 12,
-      isVideo: false
+      isVideo: false,
+      swapType: "items",
+      duration: "3 days"
     },
     {
       id: 4,
       user: "Emma Wilson",
       avatar: "https://source.unsplash.com/random/300x300?portrait=4",
-      hours: 2,
-      skills: "Language tutoring, Spanish, French",
-      description: "Made this quick tutorial for basic Spanish phrases. Would love to swap language skills!",
+      itemName: "MacBook Pro",
+      description: "Need to borrow a MacBook for my trip next week. Will provide deposit and take good care of it!",
       type: "seeking",
-      media: "https://source.unsplash.com/random/600x800?study=1",
+      media: "https://source.unsplash.com/random/600x800?laptop=1",
       likes: 32,
       comments: 8,
-      isVideo: true
+      isVideo: true,
+      swapType: "items",
+      duration: "5 days"
     }
   ];
 
@@ -109,10 +117,24 @@ const TimeSwap = () => {
       
       <main className="max-w-lg mx-auto px-4 py-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">TimeSwap</h1>
+          <div className="flex items-center">
+            <Clock className="mr-2 h-5 w-5 text-primary" />
+            <h1 className="text-2xl font-bold">TimeSwap</h1>
+            <Badge variant="outline" className="ml-2">Temporary Exchanges</Badge>
+          </div>
           <Button onClick={() => setTimeSwapModalOpen(true)}>
             <Plus className="mr-1 h-4 w-4" />
             Create TimeSwap
+          </Button>
+        </div>
+        
+        <div className="bg-muted/50 p-3 rounded-lg mb-6 flex items-center justify-between">
+          <div className="text-sm">
+            <p className="font-medium">Looking for permanent swaps?</p>
+            <p className="text-muted-foreground text-xs">Visit StarSwap for lifetime exchanges</p>
+          </div>
+          <Button variant="outline" size="sm" asChild>
+            <a href="/">Go to StarSwap</a>
           </Button>
         </div>
         
@@ -134,8 +156,14 @@ const TimeSwap = () => {
                       </Avatar>
                       <div>
                         <CardTitle className="text-base">{item.user}</CardTitle>
-                        <div className="text-sm text-muted-foreground">
-                          {item.type === "offering" ? "Offering" : "Seeking"} {item.hours} {item.hours === 1 ? "hour" : "hours"}
+                        <div className="text-sm text-muted-foreground flex items-center">
+                          <Badge variant="outline" className="mr-2 text-xs font-normal">
+                            {item.type === "offering" ? 
+                              (item.swapType === "skills" ? "Offering Skills" : "Lending Item") : 
+                              (item.swapType === "skills" ? "Seeking Skills" : "Borrowing Item")}
+                          </Badge>
+                          <Timer className="h-3.5 w-3.5 mr-1" />
+                          {item.duration}
                         </div>
                       </div>
                       <div className="ml-auto">
@@ -183,7 +211,11 @@ const TimeSwap = () => {
                     <div className="mb-2">
                       <p className="text-sm"><span className="font-semibold">{item.user}</span> {item.description}</p>
                     </div>
-                    <p className="text-sm font-medium text-muted-foreground mb-2">Skills: {item.skills}</p>
+                    {item.swapType === "skills" ? (
+                      <p className="text-sm font-medium text-muted-foreground mb-2">Skills: {item.skills}</p>
+                    ) : (
+                      <p className="text-sm font-medium text-muted-foreground mb-2">Item: {item.itemName}</p>
+                    )}
                   </div>
                   
                   <CardFooter>
