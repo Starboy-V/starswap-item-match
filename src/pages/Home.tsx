@@ -18,11 +18,18 @@ const Home = () => {
 
   // Load items with a delay to improve perceived performance
   useEffect(() => {
+    // Ensure we have an array ready even if empty
+    setCurrentItems([]);
+    
     const timer = setTimeout(() => {
-      setCurrentItems([...items]);
+      if (items && items.length > 0) {
+        setCurrentItems([...items]);
+      } else {
+        console.warn("No items found in data source");
+      }
       setIsLoading(false);
       setIsInitialLoad(false);
-    }, 500);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, []);
@@ -53,7 +60,7 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen pb-16 bg-gradient-to-b from-background to-background/90">
+    <div className="min-h-screen pb-16">
       <Header />
       
       <main className="px-4 py-6 max-w-md mx-auto">
@@ -64,7 +71,7 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="h-[500px] flex flex-col items-center justify-center"
+              className="h-[500px] flex flex-col items-center justify-center cosmic-panel rounded-xl"
             >
               <motion.div 
                 animate={{ 
@@ -77,9 +84,9 @@ const Home = () => {
                 }}
                 className="mb-4"
               >
-                <Star size={40} className="text-primary" />
+                <Star size={40} className="text-primary text-glow" fill="currentColor" />
               </motion.div>
-              <p className="text-gray-500">Loading amazing items...</p>
+              <p className="text-gray-400">Discovering cosmic items...</p>
             </motion.div>
           ) : currentItems.length > 0 ? (
             <motion.div 
@@ -90,8 +97,8 @@ const Home = () => {
               className="relative h-[500px]"
             >
               <Suspense fallback={
-                <div className="h-[500px] flex items-center justify-center">
-                  <Loader className="animate-spin text-primary" size={30} />
+                <div className="h-[500px] flex items-center justify-center cosmic-panel rounded-xl">
+                  <Loader className="animate-spin text-primary text-glow" size={30} />
                 </div>
               }>
                 {/* Only render the top card for better performance */}
@@ -128,16 +135,16 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="h-[500px] flex flex-col items-center justify-center"
+              className="h-[500px] flex flex-col items-center justify-center cosmic-panel rounded-xl"
             >
               <motion.div 
                 animate={{ rotate: 360 }} 
                 transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
                 className="mb-4"
               >
-                <Star size={40} className="text-primary" />
+                <Star size={40} className="text-primary text-glow" fill="currentColor" />
               </motion.div>
-              <p className="text-gray-500">Finding more items...</p>
+              <p className="text-gray-400">Finding more cosmic treasures...</p>
             </motion.div>
           ) : (
             <motion.div 
@@ -146,7 +153,7 @@ const Home = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="h-[500px] flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-xl backdrop-blur-sm"
+              className="h-[500px] flex flex-col items-center justify-center cosmic-panel rounded-xl backdrop-blur-sm"
               style={{ 
                 transform: "perspective(1000px) rotateX(5deg)", 
                 transformStyle: "preserve-3d"
@@ -163,10 +170,10 @@ const Home = () => {
                   ease: "easeInOut" 
                 }}
               >
-                <Star size={48} className="text-primary mb-4" />
+                <Star size={48} className="text-primary mb-4 text-glow" fill="currentColor" />
               </motion.div>
-              <p className="text-xl font-medium text-gray-500">No more items</p>
-              <p className="text-gray-400 mt-2">Check back later for more items to swap</p>
+              <p className="text-xl font-medium text-gray-300">No more items</p>
+              <p className="text-gray-400 mt-2">Check back later for more cosmic treasures</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -177,13 +184,13 @@ const Home = () => {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="mt-8"
         >
-          <h2 className="text-lg font-semibold mb-3">How to use StarSwap</h2>
-          <div className="bg-white p-4 rounded-lg shadow-md backdrop-blur-sm border border-gray-100"
+          <h2 className="text-lg font-semibold mb-3 text-glow">How to use StarSwap X</h2>
+          <div className="cosmic-panel rounded-lg p-4 backdrop-blur-sm"
                style={{ 
                  transform: "perspective(1000px) rotateX(2deg)", 
                  transformStyle: "preserve-3d"
                }}>
-            <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
+            <ol className="list-decimal list-inside space-y-2 text-sm text-gray-300">
               <li>Swipe right on items you'd like to swap for</li>
               <li>Swipe left on items you're not interested in</li>
               <li>If the owner likes your items too, it's a match!</li>
