@@ -81,6 +81,8 @@
     @apply relative bg-white rounded-xl shadow-lg overflow-hidden;
     transform: translateX(0) translateY(0) rotate(0);
     transition: transform 0.3s ease-out;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
   }
 
   .swipe-card-exit-left {
@@ -95,5 +97,17 @@
 
   .nav-icon {
     @apply flex flex-col items-center text-xs;
+  }
+  
+  /* 3D effect utilities */
+  .perspective-card {
+    transform: perspective(1000px);
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .rotate-3d-hover:hover {
+    transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
   }
 }
