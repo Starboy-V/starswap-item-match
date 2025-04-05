@@ -16,9 +16,17 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import TimeSwap from "./pages/TimeSwap";
 import StarfieldBackground from "./components/StarfieldBackground";
+import { motion, AnimatePresence } from "framer-motion";
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -54,12 +62,33 @@ const App = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-background">
-        <div className="animate-pulse">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen flex flex-col items-center justify-center bg-background"
+      >
+        <StarfieldBackground />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+            rotate: [0, 5, 0, -5, 0]
+          }}
+          transition={{ 
+            repeat: Infinity, 
+            duration: 2
+          }}
+        >
           <Loader size={50} className="text-primary animate-spin" />
-        </div>
-        <p className="mt-4 text-muted-foreground">Loading StarSwap X...</p>
-      </div>
+        </motion.div>
+        <motion.p 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="mt-4 text-muted-foreground text-glow"
+        >
+          Loading StarSwap X...
+        </motion.p>
+      </motion.div>
     );
   }
 
@@ -69,16 +98,18 @@ const App = () => {
         <QueryClientProvider client={queryClient}>
           <TooltipProvider>
             <StarfieldBackground />
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/matches" element={<Matches />} />
-              <Route path="/add-item" element={<AddItem />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/timeswap" element={<TimeSwap />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AnimatePresence mode="wait">
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/matches" element={<Matches />} />
+                <Route path="/add-item" element={<AddItem />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/timeswap" element={<TimeSwap />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AnimatePresence>
             <Toaster />
             <Sonner />
           </TooltipProvider>

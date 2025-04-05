@@ -10,16 +10,16 @@ const StarfieldBackground = () => {
     // Clear any existing stars
     containerRef.current.innerHTML = '';
     
-    // Create stars
-    const starCount = 150;
+    // Create stars with improved properties for better cosmic theme
+    const starCount = 200; // Increased star count for more immersive effect
     for (let i = 0; i < starCount; i++) {
       const star = document.createElement('div');
       star.className = 'star';
       
-      // Random star properties
-      const size = Math.random() * 3;
-      const opacity = Math.random() * 0.7 + 0.3;
-      const duration = Math.random() * 4 + 2; // Between 2-6 seconds
+      // Enhanced star properties
+      const size = Math.random() * 3 + 0.5; // Slightly larger stars
+      const opacity = Math.random() * 0.6 + 0.2; // Adjusted opacity range
+      const duration = Math.random() * 5 + 3; // Longer animation duration for smoother effect
       
       // Position randomly
       star.style.left = `${Math.random() * 100}%`;
@@ -32,12 +32,16 @@ const StarfieldBackground = () => {
       // Add a small delay to each star
       star.style.animationDelay = `${Math.random() * duration}s`;
       
+      // Add different star colors for more cosmic feel
+      const colors = ['#ffffff', '#e0f2ff', '#c4d8ff', '#d9c4ff', '#c4fffa'];
+      star.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      
       // Append to container
       containerRef.current.appendChild(star);
     }
   }, []);
 
-  return <div ref={containerRef} className="stars"></div>;
+  return <div ref={containerRef} className="stars fixed inset-0 -z-10 pointer-events-none"></div>;
 };
 
 export default StarfieldBackground;
